@@ -1,0 +1,14 @@
+# dev-oly folders
+.babelrc*
+.eslintrc*
+.bookignore
+book.json
+test
+examples
+node_modules
+
+# doc folders
+test
+docs
+examples
+_book

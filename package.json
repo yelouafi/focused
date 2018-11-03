@@ -1,0 +1,50 @@
+{
+  "name": "focused",
+  "version": "0.0.1",
+  "description": "Lens/Optics library for JavaScript",
+  "module": "src/index.js",
+  "main": "cjs/index.js",
+  "repository": "https://github.com/yelouafi/focused.git",
+  "author": "Yassine Elouafi <yelouafi@gmail.com>",
+  "license": "MIT",
+  "keywords": [
+    "optic",
+    "lens",
+    "isomorphism",
+    "prism",
+    "traversal"
+  ],
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "eslint": "^5.8.0",
+    "esm": "^3.0.84",
+    "faucet": "^0.0.1",
+    "rimraf": "^2.6.2",
+    "tape": "^4.9.1"
+  },
+  "scripts": {
+    "lint": "eslint src test",
+    "test": "node --require=esm test/index | faucet",
+    "check": "npm run lint && npm run test",
+    "clean": "rimraf cjs",
+    "build": "npm run clean && babel src --out-dir cjs",
+    "prepare": "npm run build",
+    "prerelease": "npm run check && npm run prepare",
+    "release:patch": "npm run prerelease && npm version patch && git push --follow-tags && npm publish",
+    "release:minor": "npm run prerelease && npm version minor && git push --follow-tags && npm publish",
+    "release:major": "npm run prerelease && npm version major && git push --follow-tags && npm publish"
+  },
+  "babel": {
+    "presets": [
+      [
+        "env",
+        {
+          "targets": {
+            "node": "current"
+          }
+        }
+      ]
+    ]
+  }
+}
