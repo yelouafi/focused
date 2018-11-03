@@ -16,9 +16,9 @@ npm install --save focused
 
 # Tutorial
 
-Lenses, or Optics in general, are an elegant way, from functional programming, to access and updates immutable data structures. Simply put, an optic gives us a reference, also called a _focus_, to a nested part of a data structure. Once we build a focus (using some helper), we can use given functions to access or update the embedded value.
+Lenses, or Optics in general, are an elegant way, from functional programming, to access and update immutable data structures. Simply put, an optic gives us a reference, also called a _focus_, to a nested part of a data structure. Once we build a focus (using some helper), we can use given functions to access or update, immutably, the embedded value.
 
-In the following tutorial, we'll introduce Optics using `focused` helpers. The library is meant to be freindly for JavaScript developers that are not used to FP jargon.
+In the following tutorial, we'll introduce Optics using `focused` helpers. The library is meant to be friendly for JavaScript developers who are not used to FP jargon.
 
 We'll use the following object as a test bed
 
@@ -89,7 +89,7 @@ view(_.name, state);
 // => Luffy
 ```
 
-You're probably wondering, what's the utility of the above function, since the access can be trivially achieved with `state.name`. That's true, but lenses can allow some advanced accesses which are not as trivial to acheive as the above case, especially when combined with other optics as we'll see.
+You're probably wondering, what's the utility of the above function, since the access can be trivially achieved with `state.name`. That's true, but lenses can allow some advanced accesses which are not as trivial to achieve as the above case, especially when combined with other optics as we'll see.
 
 Similarly, `preview` can be used with Affines to safely dereference deeply nested values
 
@@ -100,7 +100,7 @@ preview(_.$assitant.$level, state);
 
 ## Focusing on mulitple values
 
-As we said, Lenses can focus on a single value. To focus on mulitpls values, we can use the `each` optic together with `toList` function (`view` can only view a single value).
+As we said, Lenses can focus on a single value. To focus on mulitple values, we can use the `each` optic together with `toList` function (`view` can only view a single value).
 
 For example, to gets the `name`s of all Luffy's `nakama`
 
@@ -111,7 +111,7 @@ toList(_.nakama.$(each).name, state);
 
 Note how we wrapped `each` inside the `.$()` method of the proxy. `.$()` lets us insert arbitrary optics in the access path which will be automatically composed with the other optics in the chain.
 
-In optics FP, `each` is called a _Traversal_. It's an optic which can focus on multiple parts inside a data structure. Note that traversals are not restricted to lists. You can create your own traversals for any _Traversable_ data strucure (eg Maps, trees, linked lists ...).
+In optics FP, `each` is called a _Traversal_. It's an optic which can focus on multiple parts inside a data structure. Note that traversals are not restricted to lists. You can create your own traversals for any _Traversable_ data structure (eg Maps, trees, linked lists ...).
 
 Of course, traversals work automatically with update functions like `over`. For example
 
@@ -159,7 +159,7 @@ const pkgJson = `{
 
 And we want to focus on the `mydep` field inside `dependencies`. With normal JS code, we can call `JSON.parse` on the object, modify the field on the created object, then call `JSON.stringify` on the same object to create the new json.
 
-It turns out that optics has got a first class concept for the above operations. When the whole (source JSON) and the part (object created by `JSON.parse`) _matches_ we call that an _Isomorphism_ (pr simple _Iso_). In the above example we can create an isomorphism between the JSON string and the corresponding JS object using the `iso` function
+It turns out that optics has got a first class concept for the above operations. When the whole (source JSON) and the part (object created by `JSON.parse`) _matches_ we call that an _Isomorphism_ or simply _Iso_). In the above example we can create an isomorphism between the JSON string and the corresponding JS object using the `iso` function
 
 ```js
 const json = iso(JSON.parse, JSON.stringify);
@@ -169,13 +169,13 @@ const json = iso(JSON.parse, JSON.stringify);
 
 > Note this a partial optic since `JSON.parse` can fail. We've got another optic (oh yeah) for this one that can account for failure
 
-Ok, So having the `json` Iso, we can use it with the standard functions, for example
+Ok, so having the `json` Iso, we can use it with the standard functions, for example
 
 ```js
 set(_.$(json).dependencies.mydep, "6.1.0", pkgJson);
 ```
 
-returns another JSON string with the `mydep` modified. Abstarcting over the parsing/stringifying steps.
+returns another JSON string with the `mydep` modified. Abstracting over the parsing/stringifying steps.
 
 The previous example is nice, but it'd be nicer if we can get access to the semver string `6.0.0` as a regular JS object. Let's go a little further and create another Isomorphism for semver like strings
 
@@ -201,7 +201,7 @@ increments the minor directly in the JSON string.
 
 ## When the match can't always succeed
 
-As I mentioned, the previous case was not a total Isomorphism because JSON strings aren't always parsed to JS objects. So, as you may expect, we need to introduce another fancy name, this time our optic is called a `Prism`. Which is an Isomorphism that may fail when going from the source to the target (but which always succeed when going back).
+As I mentioned, the previous case was not a total Isomorphism because JSON strings aren't always parsed to JS objects. So, as you may expect, we need to introduce another fancy name, this time our optic is called a `Prism`. Which is an Isomorphism that may fail when going from the source to the target (but which always succeeds when going back).
 
 A simple way to create a Prism is the `simplePrism` function. It's like `iso` but you return `null` when the conversion fails.
 
