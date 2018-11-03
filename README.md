@@ -111,7 +111,7 @@ toList(_.nakama.$(each).name, state);
 
 Note how we wrapped `each` inside the `.$()` method of the proxy. `.$()` lets us insert arbitrary optics in the access path which will be automatically composed with the other optics in the chain.
 
-In optics FP, `each` is called a _Traversal_. It's an optic which can focus on multiple parts inside a data structure. Note that traversals are not restricted to lists. You can create your own traversals for any _Traversable_ data structure (eg Maps, trees, linked lists ...).
+In optics jargon, `each` is called a _Traversal_. It's an optic which can focus on multiple parts inside a data structure. Note that traversals are not restricted to lists. You can create your own traversals for any _Traversable_ data structure (eg Maps, trees, linked lists ...).
 
 Of course, traversals work automatically with update functions like `over`. For example
 
@@ -157,9 +157,9 @@ const pkgJson = `{
 `;
 ```
 
-And we want to focus on the `mydep` field inside `dependencies`. With normal JS code, we can call `JSON.parse` on the object, modify the field on the created object, then call `JSON.stringify` on the same object to create the new json.
+And we want to focus on the `mydep` field inside `dependencies`. With normal JS code, we can call `JSON.parse` on the json string, modify the field on the created object, then call `JSON.stringify` on the same object to create the new json string.
 
-It turns out that optics has got a first class concept for the above operations. When the whole (source JSON) and the part (object created by `JSON.parse`) _matches_ we call that an _Isomorphism_ or simply _Iso_). In the above example we can create an isomorphism between the JSON string and the corresponding JS object using the `iso` function
+It turns out that optics has got a first class concept for the above operations. When the whole (source JSON) and the part (object created by `JSON.parse`) _matches_ we call that an _Isomorphism_ (or simply _Iso_). In the above example we can create an isomorphism between the JSON string and the corresponding JS object using the `iso` function
 
 ```js
 const json = iso(JSON.parse, JSON.stringify);
@@ -167,7 +167,7 @@ const json = iso(JSON.parse, JSON.stringify);
 
 `iso` takes 2 functions: one to go from the source to the target, and the other to go back.
 
-> Note this a partial optic since `JSON.parse` can fail. We've got another optic (oh yeah) for this one that can account for failure
+> Note this is a partial optic since `JSON.parse` can fail. We've got another optic (oh yeah) for the one that can account for failure
 
 Ok, so having the `json` Iso, we can use it with the standard functions, for example
 
