@@ -25,12 +25,12 @@ const state = {
 
 const _ = lensProxy();
 
-test("view", assert => {
+test("view/prop", assert => {
   assert.equal(view(_.name, state), "Luffy");
   assert.end();
 });
 
-test("preview", assert => {
+test("preview/maybeProp", assert => {
   assert.deepEqual(preview(_.$lastname.level, state), null);
   assert.end();
 });
@@ -40,7 +40,7 @@ test("over/maybeProp", assert => {
   assert.end();
 });
 
-test("over", assert => {
+test("over/prop", assert => {
   assert.deepEqual(over(_.level, x => x * 2, state), {
     ...state,
     level: state.level * 2
