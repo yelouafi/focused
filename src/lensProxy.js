@@ -38,6 +38,7 @@ function getOrCreateLens(memo, parent, key) {
       child = prop(key);
     }
     l = lensProxy(compose2(parent, child));
+    memo.set(key, l);
   }
   return l;
 }
