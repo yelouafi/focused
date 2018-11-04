@@ -35,7 +35,7 @@ const state = {
   ]
 };
 
-// we'll this as a convenient way to access deep properties in the state
+// we'll use this as a convenient way to access deep properties in the state
 const _ = lensProxy();
 ```
 
@@ -226,4 +226,4 @@ will simply return the original JSON string. The conversion of the `semver` Iso 
 
 ## API
 
-TBD (or better, you could contribute on it)
+TBD (or better, you could help on it)
