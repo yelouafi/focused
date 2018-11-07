@@ -18,35 +18,59 @@ import { compose2Prisms } from "./prism";
 const id = x => x;
 const konst = x => _ => x;
 
-// view : (Getting<A,S,A>, S) => A
-export function view(aGetter, s) {
-  return aGetter(ConstVoid, id, s);
+function curry2(f) {
+  return function curried2(x, y) {
+    if (arguments.length === 2) return f(x, y);
+    return function curried2_1arg(y) {
+      return f(x, y);
+    };
+  };
 }
 
-// over : (Settable<S,T,A,B>, A => B, S) => T
-export function over(aSettable, f, s) {
+function curry3(f) {
+  return function curried3(x, y, z) {
+    if (arguments.length === 3) return f(x, y, z);
+    if (arguments.length === 2)
+      return function curried3_2args(z) {
+        return f(x, y, z);
+      };
+    return curry2(function curried3_1(y, z) {
+      return f(x, y, z);
+    });
+  };
+}
+
+// view : Getting<A,S,A> => S => A
+export const view = curry2(function _view(aGetter, s) {
+  return aGetter(ConstVoid, id, s);
+});
+
+function _over(aSettable, f, s) {
   return aSettable(Identity, f, s);
 }
 
-// over : (Settable<S,T,A,B>, B, S) => T
-export function set(aSettable, v, s) {
-  return over(aSettable, konst(v), s);
-}
+// over : Settable<S,T,A,B> => (A => B) => S => T
+export const over = curry3(_over);
 
-// toList : (Getting<[A], S,A>, S) => [A]
-export function toList(aGetting, s) {
+// set : Settable<S,T,A,B> => B => S => T
+export const set = curry3(function _set(aSettable, v, s) {
+  return _over(aSettable, konst(v), s);
+});
+
+// toList : Getting<[A], S,A> => S => [A]
+export const toList = curry2(function toList(aGetting, s) {
   return aGetting(ConstList, List.pure, s);
-}
+});
 
-// preview : (Getting<A | null, S,A>, S) => A | null
-export function preview(aGetting, s) {
+// preview : Getting<A | null, S,A> => S => (A | null)
+export const preview = curry2(function _preview(aGetting, s) {
   return aGetting(ConstFirst, id, s);
-}
+});
 
-// toList : (Getting<Boolean, S,A>, S) => Boolean
-export function has(aGetting, s) {
+// has : (Getting<Boolean, S,A>, S) => Boolean
+export const has = curry2(function _has(aGetting, s) {
   return aGetting(ConstAny, konst(true), s);
-}
+});
 
 /**
  * Compose 2 optics, Abstarcting the constraints, the type can be seen as

@@ -48,6 +48,38 @@ test("over/prop", assert => {
   assert.end();
 });
 
+test("over/curried", assert => {
+  assert.deepEqual(over(_.level)(x => x * 2, state), {
+    ...state,
+    level: state.level * 2
+  });
+  assert.deepEqual(over(_.level)(x => x * 2)(state), {
+    ...state,
+    level: state.level * 2
+  });
+  assert.deepEqual(over(_.level, x => x * 2)(state), {
+    ...state,
+    level: state.level * 2
+  });
+  assert.end();
+});
+
+test("set/curried", assert => {
+  assert.deepEqual(set(_.level)(0, state), {
+    ...state,
+    level: 0
+  });
+  assert.deepEqual(set(_.level)(0)(state), {
+    ...state,
+    level: 0
+  });
+  assert.deepEqual(set(_.level, 0)(state), {
+    ...state,
+    level: 0
+  });
+  assert.end();
+});
+
 test("toList/each", assert => {
   assert.deepEqual(
     toList(_.nakama.$(each).name, state),
