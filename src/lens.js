@@ -44,14 +44,14 @@ export function index(idx) {
   };
 }
 
-// atKey : K => SimpleLens<S, Maybe<S[K]>>
-export function atKey(key) {
+// atProp : K => SimpleLens<Maybe<S>, Maybe<S[K]>>
+export function atProp(key) {
   return function atKeyLens(aFunctor, f, s) {
-    let a = s.hasOwnProperty(key) ? s[key] : null;
+    let a = s !== null && s.hasOwnProperty(key) ? s[key] : null;
     return aFunctor.map(a2 => {
       if (a2 === null) {
         if (a === null) return s;
-        const copy = Object.assign({}, s);
+        const copy = s !== null ? Object.assign({}, s) : {};
         delete copy[key];
         return copy;
       } else {

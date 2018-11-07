@@ -1,5 +1,5 @@
-export { iso, from, withIso, non, json, compose2Isos } from "./iso";
-export { prop, index, lens, atKey } from "./lens";
+export { iso, from, withIso, non, anon, json, compose2Isos } from "./iso";
+export { prop, index, lens, atProp } from "./lens";
 export {
   prism,
   withPrism,

@@ -38,7 +38,7 @@ export function from(anIso) {
   return iso(anIso.to, anIso.from);
 }
 
-// non : a => SimpleIso<Maybe<A\a>, a>
+// non : a => SimpleIso<Maybe<A> without a, A>
 export function non(a) {
   return iso(
     //from : Maybe<A\a> -> a
@@ -46,6 +46,11 @@ export function non(a) {
     //to   : a -> Maybe<A\a>
     x => (x === a ? null : x)
   );
+}
+
+// non : (a, A -> boolean) => SimpleIso<Maybe<A> where pred(A) == false, a>
+export function anon(a, pred) {
+  return iso(m => (m === null ? a : m), x => (pred(x) ? null : x));
 }
 
 // json : SimpleIso<String,Object>

@@ -10,7 +10,10 @@ import {
   each,
   filtered,
   json,
-  lensProxy
+  lensProxy,
+  anon,
+  atProp,
+  compose
 } from "../src";
 
 const state = {
@@ -47,6 +50,48 @@ test("over/prop", assert => {
   });
   assert.end();
 });
+
+test("view/atProp", assert => {
+  assert.equal(
+    view(atProp("surname"), { name: "Luffy" }),
+    null,
+    "should return null if property is absent"
+  );
+
+  assert.end();
+});
+
+test("view/atProp", assert => {
+  assert.deepEqual(
+    set(atProp("surname"), "Monkey D.", { name: "Luffy" }),
+    {
+      name: "Luffy",
+      surname: "Monkey D."
+    },
+    "Should add the property if absent"
+  );
+
+  assert.deepEqual(
+    set(
+      compose(
+        atProp("navigator"),
+        atProp("name")
+      ),
+      "Nami",
+      { name: "Luffy" }
+    ),
+    {
+      name: "Luffy",
+      navigator: { name: "Nami" }
+    },
+    "Should add deeply nested property if absent"
+  );
+
+  assert.end();
+});
+
+// _.at('address').at('street')
+// Lens<{}, Maybe<{}>>  .  Lens<{}, Maybe<String>>
 
 test("over/curried", assert => {
   assert.deepEqual(over(_.level)(x => x * 2, state), {
@@ -114,6 +159,32 @@ test("set/[0]", assert => {
     ...state,
     nakama: state.nakama.map((n, i) => (i === 0 ? { ...n, name: "Jimbi" } : n))
   });
+  assert.end();
+});
+
+test("iso/anon", assert => {
+  // nonZero is an Iso from Maybe<negative number> to number (with 1 as default value)
+  // source is either null or a negative number
+  // target is any number
+  const negative = anon(0, x => x >= 0);
+  assert.equal(view(negative, -10), -10);
+  assert.equal(view(negative, null), 0);
+
+  assert.equal(
+    set(negative, -3, -10),
+    -3,
+    "should allow setting to negative numbers"
+  );
+  assert.equal(
+    set(negative, -3, null),
+    -3,
+    "should allow setting on null values"
+  );
+  assert.equal(
+    set(negative, 10, -3),
+    null,
+    "should not allow setting non-negative numbers"
+  );
   assert.end();
 });
 
