@@ -50,8 +50,8 @@ export function atProp(key) {
     let a = s !== null && s.hasOwnProperty(key) ? s[key] : null;
     return aFunctor.map(a2 => {
       if (a2 === null) {
-        if (a === null) return s;
-        const copy = s !== null ? Object.assign({}, s) : {};
+        if (a === null || s === null) return s;
+        const copy = Object.assign({}, s);
         delete copy[key];
         return copy;
       } else {
