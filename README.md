@@ -224,6 +224,10 @@ set(_.$(maybeJson).dependencies.mydep, "6.1.0", badJSonObj);
 
 will simply return the original JSON string. The conversion of the `semver` Iso to a prism is left as a simple exercise.
 
-## API
+## Todo
 
-TBD (or better, you could help on it)
+[ ] add documentation (how to create optics, more examples, API ...)
+[ ] add typings
+[ ] Indexed Traversals
+[ ] port more operators from Haskell lens library (with use case justification)
+
