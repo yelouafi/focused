@@ -226,8 +226,8 @@ will simply return the original JSON string. The conversion of the `semver` Iso 
 
 ## Todo
 
-[ ] add documentation (how to create optics, more examples, API ...)
-[ ] add typings
-[ ] Indexed Traversals
-[ ] port more operators from Haskell lens library (with use case justification)
+- [ ] add documentation (how to create optics, more examples, API ...)
+- [ ] add typings
+- [ ] Indexed Traversals
+- [ ] port more operators from Haskell lens library (with use case justification)
 
