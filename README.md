@@ -128,13 +128,13 @@ toList(_.nakama.$(filtered(x => x.level > 2)).name, state);
 // => ["Zoro", "Sanji"]
 ```
 
-retreives all `nakama`'s names with level above `2`. While
+retrieves all `nakama`s names with level above `2`. While
 
 ```js
 over(_.nakama.$(filtered(x => x.level > 2)).name, s => s.toUpperCase(), state);
 ```
 
-upates all `nakama`'s names with level above `2`.
+upates all `nakama`s names with level above `2`.
 
 ## When the part and the whole matches
 
