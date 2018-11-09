@@ -134,7 +134,7 @@ retrieves all `nakama`s names with level above `2`. While
 over(_.nakama.$(filtered(x => x.level > 2)).name, s => s.toUpperCase(), state);
 ```
 
-upates all `nakama`s names with level above `2`.
+updates all `nakama`s names with level above `2`.
 
 ## When the part and the whole matches
 
