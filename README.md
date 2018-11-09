@@ -29,9 +29,9 @@ const state = {
   name: "Luffy",
   level: 4,
   nakama: [
-    { name: "Zorro", level: 3 },
+    { name: "Zoro", level: 3 },
     { name: "Sanji", level: 3 },
-    { name: "Chooper", level: 2 }
+    { name: "Chopper", level: 2 }
   ]
 };
 
@@ -106,7 +106,7 @@ For example, to gets the `name`s of all Luffy's `nakama`
 
 ```js
 toList(_.nakama.$(each).name, state);
-// => ["Zorro", "Sanji", "Chopper"]
+// => ["Zoro", "Sanji", "Chopper"]
 ```
 
 Note how we wrapped `each` inside the `.$()` method of the proxy. `.$()` lets us insert arbitrary optics in the access path which will be automatically composed with the other optics in the chain.
@@ -125,7 +125,7 @@ Another traversal is `filtered` which can restrict the focus only to parts meeti
 
 ```js
 toList(_.nakama.$(filtered(x => x.level > 2)).name, state);
-// => ["Zorro", "Sanji"]
+// => ["Zoro", "Sanji"]
 ```
 
 retreives all `nakama`'s names with level above `2`. While
