@@ -29,9 +29,9 @@ const state = {
   name: "Luffy",
   level: 4,
   nakama: [
-    { name: "Zorro", level: 3 },
+    { name: "Zoro", level: 3 },
     { name: "Sanji", level: 3 },
-    { name: "Chooper", level: 2 }
+    { name: "Chopper", level: 2 }
   ]
 };
 
@@ -76,7 +76,7 @@ It's important to remember that a lens focuses _exactly_ on 1 value. no more, no
 If you want the access to silently fail, you can prefix the property name with `$`.
 
 ```js
-const newState = over(_.$assitant.$level, x => x * 2, state);
+const newState = over(_.$assistant.$level, x => x * 2, state);
 // newState == state
 ```
 
@@ -98,15 +98,15 @@ preview(_.$assitant.$level, state);
 // null
 ```
 
-## Focusing on mulitple values
+## Focusing on multiple values
 
-As we said, Lenses can focus on a single value. To focus on mulitple values, we can use the `each` optic together with `toList` function (`view` can only view a single value).
+As we said, Lenses can focus on a single value. To focus on multiple values, we can use the `each` optic together with `toList` function (`view` can only view a single value).
 
 For example, to gets the `name`s of all Luffy's `nakama`
 
 ```js
 toList(_.nakama.$(each).name, state);
-// => ["Zorro", "Sanji", "Chopper"]
+// => ["Zoro", "Sanji", "Chopper"]
 ```
 
 Note how we wrapped `each` inside the `.$()` method of the proxy. `.$()` lets us insert arbitrary optics in the access path which will be automatically composed with the other optics in the chain.
@@ -125,16 +125,16 @@ Another traversal is `filtered` which can restrict the focus only to parts meeti
 
 ```js
 toList(_.nakama.$(filtered(x => x.level > 2)).name, state);
-// => ["Zorro", "Sanji"]
+// => ["Zoro", "Sanji"]
 ```
 
-retreives all `nakama`'s names with level above `2`. While
+retrieves all `nakama`s names with level above `2`. While
 
 ```js
 over(_.nakama.$(filtered(x => x.level > 2)).name, s => s.toUpperCase(), state);
 ```
 
-upates all `nakama`'s names with level above `2`.
+updates all `nakama`s names with level above `2`.
 
 ## When the part and the whole matches
 
@@ -215,7 +215,7 @@ const maybeJson = simplePrism(s => {
 }, JSON.stringify);
 ```
 
-So now,something like
+So now, something like
 
 ```js
 const badJSonObj = "@#" + jsonObj;
