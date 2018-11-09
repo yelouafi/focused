@@ -98,9 +98,9 @@ preview(_.$assitant.$level, state);
 // null
 ```
 
-## Focusing on mulitple values
+## Focusing on multiple values
 
-As we said, Lenses can focus on a single value. To focus on mulitple values, we can use the `each` optic together with `toList` function (`view` can only view a single value).
+As we said, Lenses can focus on a single value. To focus on multiple values, we can use the `each` optic together with `toList` function (`view` can only view a single value).
 
 For example, to gets the `name`s of all Luffy's `nakama`
 
