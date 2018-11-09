@@ -76,7 +76,7 @@ It's important to remember that a lens focuses _exactly_ on 1 value. no more, no
 If you want the access to silently fail, you can prefix the property name with `$`.
 
 ```js
-const newState = over(_.$assitant.$level, x => x * 2, state);
+const newState = over(_.$assistant.$level, x => x * 2, state);
 // newState == state
 ```
 
