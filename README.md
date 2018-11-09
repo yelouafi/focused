@@ -215,7 +215,7 @@ const maybeJson = simplePrism(s => {
 }, JSON.stringify);
 ```
 
-So now,something like
+So now, something like
 
 ```js
 const badJSonObj = "@#" + jsonObj;
