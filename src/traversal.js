@@ -3,16 +3,12 @@
     type SimpleTraversal<S,A> = Traversal<S,S,A,A>
 */
 
-// each : Traversal< Iterable<A>, Iterable<B>, A, B>
+// each : Traversal< Array<A>, Array<B>, A, B>
 export function each(anApplicative, f, xs) {
-  const fs = [];
-  for (let x of xs) {
-    fs.push(f(x));
-  }
-  return anApplicative.zip(fs);
+  return anApplicative.zip(xs.map(f));
 }
 
-// filter : (A => Boolean) => Traversal< Iterable<A>, Iterable<B>, A, B>
+// filter : (A => Boolean) => Traversal< Array<A>, Array<B>, A, B>
 export function filtered(pred, traverse = each) {
   return function filterTraversal(anApplicative, f, s) {
     return traverse(anApplicative, update, s);
