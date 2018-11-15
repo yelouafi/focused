@@ -1,3 +1,4 @@
+import { id, konst, curry2, curry3 } from "./utils";
 import {
   ConstAny,
   ConstFirst,
@@ -14,31 +15,6 @@ import { compose2Prisms } from "./prism";
   type Getting<R,S,A>     = (Const<R>, A => Const<R,A>, S) => Const<R,S>
   type Getter<S,A>        = <R>Getting<R,S,A> -- ie should work for any R
  */
-
-const id = x => x;
-const konst = x => _ => x;
-
-function curry2(f) {
-  return function curried2(x, y) {
-    if (arguments.length === 2) return f(x, y);
-    return function curried2_1arg(y) {
-      return f(x, y);
-    };
-  };
-}
-
-function curry3(f) {
-  return function curried3(x, y, z) {
-    if (arguments.length === 3) return f(x, y, z);
-    if (arguments.length === 2)
-      return function curried3_2args(z) {
-        return f(x, y, z);
-      };
-    return curry2(function curried3_1(y, z) {
-      return f(x, y, z);
-    });
-  };
-}
 
 // view : Getting<A,S,A> => S => A
 export const view = curry2(function _view(aGetter, s) {
