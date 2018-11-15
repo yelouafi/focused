@@ -1,7 +1,7 @@
 /*
     type Either<T,A> = { type: "LEFT", value: T } | { type: "RIGHT", value: A }
 
-    type Iso<S,T,A,B> = 
+    type Prism<S,T,A,B> = 
             (Applicative<F>, A => F<B>, S) => F<T> 
         &   { __IS_PRISM: true, match: S => Either<T,A>, to: B => T }
 
@@ -66,7 +66,7 @@ export function compose2Prisms(parentL, childL) {
   );
 }
 
-// json : SimpleIso<String,Object>
+// json : SimplePrism<String,Object>
 export const maybeJson = simplePrism(s => {
   try {
     return JSON.parse(s);
