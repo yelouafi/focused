@@ -340,7 +340,7 @@ The equivalent operation in `focused` lenses is
 ```js
 const newPerson = set(_.freinds[0].adress.street, "new street", person)
 ```
-We're chaining `.` accesses to successively focus on deeply nested values. Behind the scenes, `lensProxy` is creating the necessary `prop` and `index` lenses, then composing them using `compose` function. Using explicit style, the above lens could be rewritten like
+We're chaining `.` accesses to successively focus on deeply nested values. Behind the scene, `lensProxy` is creating the necessary `prop` and `index` lenses, then composing them using `compose` function. Using explicit style, the above lens could be rewritten like
 
 ```js
 const streetLens = compose(
