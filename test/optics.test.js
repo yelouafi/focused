@@ -13,7 +13,11 @@ import {
   lensProxy,
   anon,
   atProp,
-  compose
+  compose,
+  append,
+  insertAt,
+  removeIf,
+  removeAt
 } from "../src";
 
 const state = {
@@ -93,38 +97,6 @@ test("view/atProp", assert => {
 // _.at('address').at('street')
 // Lens<{}, Maybe<{}>>  .  Lens<{}, Maybe<String>>
 
-test("over/curried", assert => {
-  assert.deepEqual(over(_.level)(x => x * 2, state), {
-    ...state,
-    level: state.level * 2
-  });
-  assert.deepEqual(over(_.level)(x => x * 2)(state), {
-    ...state,
-    level: state.level * 2
-  });
-  assert.deepEqual(over(_.level, x => x * 2)(state), {
-    ...state,
-    level: state.level * 2
-  });
-  assert.end();
-});
-
-test("set/curried", assert => {
-  assert.deepEqual(set(_.level)(0, state), {
-    ...state,
-    level: 0
-  });
-  assert.deepEqual(set(_.level)(0)(state), {
-    ...state,
-    level: 0
-  });
-  assert.deepEqual(set(_.level, 0)(state), {
-    ...state,
-    level: 0
-  });
-  assert.end();
-});
-
 test("toList/each", assert => {
   assert.deepEqual(
     toList(_.nakama.$(each).name, state),
@@ -146,8 +118,8 @@ test("over/filtered", assert => {
     over(_.nakama.$(filtered(x => x.level > 2)).name, s => `**${s}**`, state),
     {
       ...state,
-      nakama: state.nakama.map(
-        n => (n.level > 2 ? { ...n, name: `**${n.name}**` } : n)
+      nakama: state.nakama.map(n =>
+        n.level > 2 ? { ...n, name: `**${n.name}**` } : n
       )
     }
   );
@@ -231,5 +203,41 @@ test("over/prism", assert => {
     set(_.$(maybeJson).dependencies.mydep, "6.1.0", badJSonObj),
     badJSonObj
   );
+  assert.end();
+});
+
+test("append", assert => {
+  assert.deepEqual(append(_.nakama, { name: "Nami", level: 1 }, state), {
+    ...state,
+    nakama: state.nakama.concat({ name: "Nami", level: 1 })
+  });
+  assert.end();
+});
+
+test("insertAt", assert => {
+  assert.deepEqual(insertAt(_.nakama, 1, { name: "Nami", level: 1 }, state), {
+    ...state,
+    nakama: [
+      state.nakama[0],
+      { name: "Nami", level: 1 },
+      ...state.nakama.slice(1)
+    ]
+  });
+  assert.end();
+});
+
+test("removeIf", assert => {
+  assert.deepEqual(removeIf(_.nakama, n => n.level > 2, state), {
+    ...state,
+    nakama: state.nakama.filter(n => n.level <= 2)
+  });
+  assert.end();
+});
+
+test("removeAt", assert => {
+  assert.deepEqual(removeAt(_.nakama, 2, state), {
+    ...state,
+    nakama: state.nakama.filter((_, i) => i !== 2)
+  });
   assert.end();
 });
