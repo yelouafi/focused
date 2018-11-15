@@ -1,3 +1,4 @@
+
 # focused
 
 A library to deal with Immutable updates in JavaScript. Based on the famous lens library from Haskell. Wrapped in a convenient Proxy interface.
@@ -224,10 +225,138 @@ set(_.$(maybeJson).dependencies.mydep, "6.1.0", badJSonObj);
 
 will simply return the original JSON string. The conversion of the `semver` Iso to a prism is left as a simple exercise.
 
-## Todo
+# Documentation
 
-- [ ] add documentation (how to create optics, more examples, API ...)
+Using optics follows a uniform pattern
+- First we create an optic which focuses on some value(s) inside a container
+- Then we use an operation to access or modify the value through the created optic
+
+In the following, all functions are imported from the `focused` package
+  
+## Creating Optics
+
+As seen in the tutorial,`lensProxy` offers a convenient way to create optics which focus on javascript objects and arrays. `lensProxy` is essentially a façade API which uses explicit functions behind the scene. In the following examples, we'll see both the proxy and the coresponding explicit functions.
+
+### Object properties
+As we saw in the tutorial, we use the familiar property access notation to focus on an object property. For example
+
+```js
+const _ = lensProxy()
+const nameProp = _.name
+```
+
+creates a lens which focuses on the `name` property of an object.
+
+Using the explicit style, we can use the the `prop` function
+
+```js
+const nameProp = prop("name")
+```
+As said previously, **a lens focuses exactly on one value**, it means the value must exist in the target container (in this sense the `prop` lens is *partial*). For example, if you use `nameProp` on an object which doesn't have a `name` property, it will throw an error.
+
+### Array elements
+As with object properties, we use the array index notation. For example
+
+```js
+const _ = lensProxy()
+const firstElem = _[0]
+```
+creates a lens that focuses on the first element on an array. The underlying function is `index`, so we could also write
+
+```js
+const firstElem = index(0)
+```
+
+### Creating custom lenses
+
+The `lens` function can be used to create arbitrary lenses. The (monomorphic) signature of the function is
+
+```js
+lens<S,A>(
+	getter: S => A, 
+	setter: (A,S) => S
+) => SimpleLens<S,A>
+```
+>I'm using pseudo typescript signatures that omit the names of function parameters: `S => A` means a function which takes a single parameter of type `S` and returns a parameter of type `A`. `S` and `A` are called *Generic types* and are used as placeholders for arbitrary types, for example,  we can obtain `string` => `number` by substituting `S` with `string` and `A` with `number`.
+
+The `lens` function takes 2 parameters
+
+- `getter` is used to extract the focus value from the target container
+- `setter` is used to update the target container with a new focus value.
+
+And returns a `SimpleLens<S,A>` which you can simply view as an abstract type:  it's the lens object which focus on a value of type `A` inside a container of type `S`.
+
+>The type is called `SimpleLens` because there is a more general *polymorphic* type of lenses which can also modify the type of the target container. But for now, we just focus (pun intended) on *monomorphic* lenses which just return the same type when updating.
+
+For example
+
+```js
+/*
+type Person = {
+  name: string
+}
+
+nameProp: SimpleLens<Person, string>
+*/
+const nameProp = lense(
+	s => s.name,
+	(value, s) => ({...s, name: value})
+) 
+```
+is equivalent to the `nameProp` lens we saw earlier.
+
+As you may have guessed, both `prop` and `index` can be implemented using `lens`
+
+### Composing lenses
+
+>Generally you can combine any 2 optics together, even if they're of different kind (eg you can combine lenses with traversals)
+
+A nice property of lenses, and optics in general, is that they can be combined to create a focus on deeply nested values. For example
+
+```js
+const _ = lensProxy()
+const street = _.freinds[0].address.street
+```
+creates a lens which focuses  on the `street` of the `address` of the first element of the `freinds` array. As a matter of comparaison, let's say we want to update, immutably, the `street` property on a given object `person`. Using JavaScript spread syntax
+
+```js
+const firstFreind = person.freinds[0];
+const newPerson = {
+  ...person,
+  freinds: [
+    {
+      ...firstFreind,
+      address: {
+        ...firstFreind.address,
+        street: "new street"
+      }
+    },
+    ...person.freinds.slice(1)
+  ]
+};
+```
+
+The equivalent operation in `focused` lenses is
+```js
+const newPerson = set(_.freinds[0].address.street, "new street", person)
+```
+We're chaining `.` accesses to successively focus on deeply nested values. Behind the scene, `lensProxy` is creating the necessary `prop` and `index` lenses, then composing them using `compose` function. Using explicit style, the above lens could be rewritten like
+
+```js
+const streetLens = compose(
+  prop("freinds"),
+  index(0),
+  prop("address"),
+  prop("street")
+);
+```
+
+The important thing to remember here, is that`lensProxy` is essentially doing the same thing in the above `compose` example. Plus some memoization tricks to ensure that lenses are created only once and reused on subsequent operations
+
+(TBD)
+
+## Todo
+- [ ] completing documentation (how to create optics, more examples, API ...)
 - [ ] add typings
 - [ ] Indexed Traversals
 - [ ] port more operators from Haskell lens library (with use case justification)
-
