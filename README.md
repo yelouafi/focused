@@ -315,7 +315,7 @@ A nice property of lenses, and optics in general, is that they can be combined t
 
 ```js
 const _ = lensProxy()
-const street = _.freinds[0].adress.street
+const street = _.freinds[0].address.street
 ```
 creates a lens which focuses  on the `street` of the `address` of the first element of the `freinds` array. As a matter of comparaison, let's say we want to update, immutably, the `street` property on a given object `person`. Using JavaScript spread syntax
 
@@ -338,7 +338,7 @@ const newPerson = {
 
 The equivalent operation in `focused` lenses is
 ```js
-const newPerson = set(_.freinds[0].adress.street, "new street", person)
+const newPerson = set(_.freinds[0].address.street, "new street", person)
 ```
 We're chaining `.` accesses to successively focus on deeply nested values. Behind the scene, `lensProxy` is creating the necessary `prop` and `index` lenses, then composing them using `compose` function. Using explicit style, the above lens could be rewritten like
 
