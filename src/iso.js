@@ -55,3 +55,6 @@ export function anon(a, pred) {
 
 // json : SimpleIso<String,Object>
 export const json = iso(JSON.parse, JSON.stringify);
+
+// SimpleIso<Map<Key,Value>>, Array<[Key,Value]>
+export const entries = iso(map => [...map.entries()], kvs => new Map(kvs));
