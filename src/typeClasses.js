@@ -29,13 +29,13 @@ export const Any = {
 export const Identity = {
   pure: x => x,
   map: (f, x) => f(x),
-  zip: xs => xs
+  combine: (f, xs) => f(xs)
 };
 
 export const Const = aMonoid => ({
   pure: _ => aMonoid.empty(),
   map: (f, x) => x,
-  zip: xs => aMonoid.concat(xs)
+  combine: (_, xs) => aMonoid.concat(xs)
 });
 
 export const ConstVoid = Const(Void);

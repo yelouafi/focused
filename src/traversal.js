@@ -1,3 +1,4 @@
+import { id } from "./utils";
 /*
     type Traversal<S,T,A,B> = (Applicative<F>, A => F<B>, S) => F<T>
     type SimpleTraversal<S,A> = Traversal<S,S,A,A>
@@ -5,7 +6,7 @@
 
 // each : Traversal< Array<A>, Array<B>, A, B>
 export function each(anApplicative, f, xs) {
-  return anApplicative.zip(xs.map(f));
+  return anApplicative.combine(id, xs.map(f));
 }
 
 // filter : (A => Boolean) => Traversal< Array<A>, Array<B>, A, B>
