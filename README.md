@@ -402,7 +402,7 @@ const mapEntries = iso(
 );
 ```
 
-Then from here, we can traverse keys or values by simply focusing on the appropriate index (`0` or `1`) of each pair n the returned array. 
+Then from here, we can traverse keys or values by simply focusing on the appropriate index (`0` or `1`) of each pair in the returned array. 
 
 ```js
 eachMapValue = compose(mapEntries, each, index(1));
