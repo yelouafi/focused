@@ -1,4 +1,7 @@
 import { id } from "./utils";
+import { compose } from "./operations";
+import { mapEntries } from "./iso";
+import { index } from "./lens";
 /*
     type Traversal<S,T,A,B> = (Applicative<F>, A => F<B>, S) => F<T>
     type SimpleTraversal<S,A> = Traversal<S,S,A,A>
@@ -34,3 +37,17 @@ export function maybeProp(name) {
     }, f(s[name]));
   };
 }
+
+// eachValue :: SimpleTraversal<Map<K,V>, V>
+export const eachMapValue = compose(
+  mapEntries,
+  each,
+  index(1)
+);
+
+// eachKey :: SimpleTraversal<Map<K,V>, K>
+export const eachMapKey = compose(
+  mapEntries,
+  each,
+  index(0)
+);

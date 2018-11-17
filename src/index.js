@@ -1,6 +1,15 @@
 import { curry3, curry4 } from "./utils";
 import { over } from "./operations";
-export { iso, from, withIso, non, anon, json, compose2Isos } from "./iso";
+export {
+  iso,
+  from,
+  withIso,
+  non,
+  anon,
+  json,
+  mapEntries,
+  compose2Isos
+} from "./iso";
 export { prop, index, lens, atProp } from "./lens";
 export {
   prism,
@@ -11,7 +20,13 @@ export {
   maybeJson,
   compose2Prisms
 } from "./prism";
-export { each, filtered, maybeProp } from "./traversal";
+export {
+  each,
+  filtered,
+  maybeProp,
+  eachMapKey,
+  eachMapValue
+} from "./traversal";
 export {
   view,
   preview,
