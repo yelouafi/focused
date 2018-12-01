@@ -22,8 +22,8 @@ export interface Applicative<A, B, FA, FB> extends Functor<A, B, FA, FB> {
 }
 
 export interface Getting<R, S, A> {
-  __type: "Getting";
-  __applyOptic: <FA extends Const<R, A>, FS extends Const<R, S>>(
+  zz_type: "Getting";
+  zz_applyOptic: <FA extends Const<R, A>, FS extends Const<R, S>>(
     F: Applicative<A, S, FA, FS>,
     f: Fn<A, FA>,
     s: S
@@ -31,8 +31,8 @@ export interface Getting<R, S, A> {
 }
 
 export interface Getter<S, A> {
-  __type: "Getting";
-  __applyOptic: <R, FA extends Const<R, A>, FS extends Const<R, S>>(
+  zz_type: "Getting";
+  zz_applyOptic: <R, FA extends Const<R, A>, FS extends Const<R, S>>(
     F: Functor<A, S, FA, FS>,
     f: Fn<A, FA>,
     s: S
@@ -40,15 +40,15 @@ export interface Getter<S, A> {
 }
 
 export interface Iso<S, T, A, B> {
-  __type: "Getting" & "Iso" & "Lens" & "Traversal";
-  __applyOptic: (<FB, FT>(F: Functor<B, T, FB, FT>, f: Fn<A, FB>, s: S) => FT);
+  zz_type: "Getting" & "Iso" & "Lens" & "Traversal";
+  zz_applyOptic: (<FB, FT>(F: Functor<B, T, FB, FT>, f: Fn<A, FB>, s: S) => FT);
   from: (s: S) => A;
   to: (b: B) => T;
 }
 
 export interface Prism<S, T, A, B> {
-  __type: "Getting" & "Prism" & "Traversal";
-  __applyOptic: (<FB, FT>(
+  zz_type: "Getting" & "Prism" & "Traversal";
+  zz_applyOptic: (<FB, FT>(
     F: Applicative<B, T, FB, FT>,
     f: Fn<A, FB>,
     s: S
@@ -58,13 +58,13 @@ export interface Prism<S, T, A, B> {
 }
 
 export interface Lens<S, T, A, B> {
-  __type: "Getting" & "Lens" & "Traversal";
-  __applyOptic: (<FB, FT>(F: Functor<B, T, FB, FT>, f: Fn<A, FB>, s: S) => FT);
+  zz_type: "Getting" & "Lens" & "Traversal";
+  zz_applyOptic: (<FB, FT>(F: Functor<B, T, FB, FT>, f: Fn<A, FB>, s: S) => FT);
 }
 
 export interface Traversal<S, T, A, B> {
-  __type: "Getting" & "Traversal";
-  __applyOptic: (<FB, FT>(
+  zz_type: { _brand: "Getting" & "Traversal" };
+  zz_applyOptic: (<FB, FT>(
     F: Applicative<B, T, FB, FT>,
     f: Fn<A, FB>,
     s: S
@@ -98,6 +98,12 @@ export function compose<S, T, A, B, X, Y>(
   child: Getter<A, X>
 ): Getter<S, X>;
 
+export function over<S, T, A, B>(
+  optic: Traversal<S, T, A, B>,
+  updater: (a: A) => B,
+  state: S
+): T;
+
 export function set<S, T, A, B>(
   optic: Traversal<S, T, A, B>,
   value: B,
@@ -114,6 +120,24 @@ export function preview<S, A>(
 export function has<S, A>(optic: Getting<boolean, S, A>, state: S): boolean;
 
 export function toList<S, A>(optic: Getting<A[], S, A>, state: S): A[];
+
+export function append<A>(optic: SimpleTraversal<A[], A>, x: A, xs: A[]): A[];
+export function insertAt<A>(
+  optic: SimpleTraversal<A[], A>,
+  index: number,
+  x: A,
+  xs: A[]
+): A[];
+export function removeAt<A>(
+  optic: SimpleTraversal<A[], A>,
+  index: number,
+  xs: A[]
+): A[];
+export function removeIf<A>(
+  optic: SimpleTraversal<A[], A>,
+  f: (x: A) => boolean,
+  xs: A[]
+): A[];
 
 export function iso<S, T, A, B>(
   from: (s: S) => A,
@@ -134,7 +158,7 @@ export function lens<S, T, A, B>(
   set: (b: B, s: S) => T
 ): Lens<S, T, A, B>;
 export function prop<S, K extends keyof S>(name: K): SimpleLens<S, S[K]>;
-export function index<S>(i: number): SimpleLens<[A], A>;
+export function index<A>(i: number): SimpleLens<[A], A>;
 export function atProp<S, K extends keyof S>(
   name: K
 ): SimpleLens<S | null, S[K] | null>;
@@ -142,7 +166,7 @@ export function to<S, A>(getter: (s: S) => A): Getter<S, A>;
 
 export function each<A>(): SimpleTraversal<A[], A>;
 
-export function filter<A, B>(
+export function filtered<A, B>(
   f: (x: A) => Boolean,
   traversal?: Traversal<A[], B[], A, B>
 ): Traversal<A[], B[], A, B>;
@@ -169,14 +193,33 @@ export function withPrism<S, T, A, B, R>(
 // maybeJson : SimplePrism<String,Object>
 
 export type LensProxy<P, S> = SimpleLens<P, S> &
-  { [K in keyof S]: LensProxy<P, S[K]> } & {
+  (S extends object ? { [K in keyof S]: LensProxy<P, S[K]> } : {}) & {
     $<A>(child: SimpleLens<S, A>): LensProxy<P, A>;
     $<A>(child: SimpleTraversal<S, A>): TraversalProxy<P, A>;
+    $<A>(child: Getter<S, A>): GetterProxy<P, A>;
   };
 
 export type TraversalProxy<P, S> = SimpleTraversal<P, S> &
-  { [K in keyof S]: TraversalProxy<P, S[K]> } & {
+  (S extends object ? { [K in keyof S]: TraversalProxy<P, S[K]> } : {}) & {
     $<A>(child: SimpleTraversal<S, A>): TraversalProxy<P, A>;
+    $<A>(child: Getter<S, A>): GetterProxy<P, A>;
+  };
+
+export type GetterProxy<P, S> = Getter<P, S> &
+  (S extends object ? { [K in keyof S]: GetterProxy<P, S[K]> } : {}) & {
+    $<A>(child: Getter<S, A>): GetterProxy<P, A>;
   };
 
 export function lensProxy<P, S = P>(parent?: SimpleLens<P, S>): LensProxy<P, S>;
+
+type Address = {
+  street: string;
+  num: number;
+};
+
+type Person = {
+  fname: string;
+  addresses: Address[];
+};
+
+const _ = lensProxy<Person>();
