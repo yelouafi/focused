@@ -8,12 +8,16 @@ import { index } from "./lens";
 */
 
 // each : Traversal< Array<A>, Array<B>, A, B>
-export function each(anApplicative, f, xs) {
+function _each(anApplicative, f, xs) {
   return anApplicative.combine(id, xs.map(f));
 }
 
+export function each() {
+  return _each;
+}
+
 // filter : (A => Boolean) => Traversal< Array<A>, Array<B>, A, B>
-export function filtered(pred, traverse = each) {
+export function filtered(pred, traverse = _each) {
   return function filterTraversal(anApplicative, f, s) {
     return traverse(anApplicative, update, s);
 

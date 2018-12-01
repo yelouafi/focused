@@ -4,6 +4,7 @@
   "description": "Lens/Optics library for JavaScript",
   "module": "src/index.js",
   "main": "cjs/index.js",
+  "typings": "./index.d.ts",
   "repository": "https://github.com/yelouafi/focused.git",
   "author": "Yassine Elouafi <yelouafi@gmail.com>",
   "license": "MIT",
