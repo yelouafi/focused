@@ -1,6 +1,6 @@
 {
   "name": "focused",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "Lens/Optics library for JavaScript",
   "module": "src/index.js",
   "main": "cjs/index.js",
