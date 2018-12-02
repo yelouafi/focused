@@ -72,7 +72,7 @@ Besides properties, we can access elements inside an array
 set(_.nakama[0].name, "Jimbi", state);
 ```
 
-It's important to remember that a lens focuses _exactly_ on 1 value. no more, no less. In the above example, accessing a non existing property on `state` (or out of bound index) will throw an error.
+It's important to remember that a Lens focuses _exactly_ on 1 value. no more, no less. In the above example, accessing a non existing property on `state` (or out of bound index) will throw an error.
 
 If you want the access to silently fail, you can prefix the property name with `$`.
 
@@ -90,7 +90,7 @@ view(_.name, state);
 // => Luffy
 ```
 
-You're probably wondering, what's the utility of the above function, since the access can be trivially achieved with `state.name`. That's true, but lenses can allow some advanced accesses which are not as trivial to achieve as the above case, especially when combined with other optics as we'll see.
+You're probably wondering, what's the utility of the above function, since the access can be trivially achieved with `state.name`. That's true, but Lenses allows more advanced accesses that are not as trivial to achieve as the above case, especially when combined with other Optics as we'll see.
 
 Similarly, `preview` can be used with Affines to safely dereference deeply nested values
 
@@ -101,7 +101,7 @@ preview(_.$assitant.$level, state);
 
 ## Focusing on multiple values
 
-As we said, Lenses can focus on a single value. To focus on multiple values, we can use the `each` optic together with `toList` function (`view` can only view a single value).
+As we said, Lenses can focus on a single value. To focus on multiple values, we can use the `each` Optic together with `toList` function (`view` can only view a single value).
 
 For example, to gets the `name`s of all Luffy's `nakama`
 
@@ -110,11 +110,11 @@ toList(_.nakama.$(each).name, state);
 // => ["Zoro", "Sanji", "Chopper"]
 ```
 
-Note how we wrapped `each` inside the `.$()` method of the proxy. `.$()` lets us insert arbitrary optics in the access path which will be automatically composed with the other optics in the chain.
+Note how we wrapped `each` inside the `.$()` method of the proxy. `.$()` lets us insert arbitrary Optics in the access path which will be automatically composed with the other Optics in the chain.
 
-In optics jargon, `each` is called a _Traversal_. It's an optic which can focus on multiple parts inside a data structure. Note that traversals are not restricted to lists. You can create your own traversals for any _Traversable_ data structure (eg Maps, trees, linked lists ...).
+In Optics jargon, `each` is called a _Traversal_. It's an optic which can focus on multiple parts inside a data structure. Note that Traversals are not restricted to lists. You can create your own Traversals for any _Traversable_ data structure (eg Maps, trees, linked lists ...).
 
-Of course, traversals work automatically with update functions like `over`. For example
+Of course, Traversals work automatically with update functions like `over`. For example
 
 ```js
 over(_.nakama.$(each).name, s => s.toUpperCase(), state);
@@ -122,7 +122,7 @@ over(_.nakama.$(each).name, s => s.toUpperCase(), state);
 
 returns a new state with all `nakama` names uppercased.
 
-Another traversal is `filtered` which can restrict the focus only to parts meeting some criteria. For example
+Another Traversal is `filtered` which can restrict the focus only to parts meeting some criteria. For example
 
 ```js
 toList(_.nakama.$(filtered(x => x.level > 2)).name, state);
@@ -160,7 +160,7 @@ const pkgJson = `{
 
 And we want to focus on the `mydep` field inside `dependencies`. With normal JS code, we can call `JSON.parse` on the json string, modify the field on the created object, then call `JSON.stringify` on the same object to create the new json string.
 
-It turns out that optics has got a first class concept for the above operations. When the whole (source JSON) and the part (object created by `JSON.parse`) _matches_ we call that an _Isomorphism_ (or simply _Iso_). In the above example we can create an isomorphism between the JSON string and the corresponding JS object using the `iso` function
+It turns out that Optics has got a first class concept for the above operations. When the whole (source JSON) and the part (object created by `JSON.parse`) _matches_ we call that an _Isomorphism_ (or simply _Iso_). In the above example we can create an Isomorphism between the JSON string and the corresponding JS object using the `iso` function
 
 ```js
 const json = iso(JSON.parse, JSON.stringify);
@@ -168,7 +168,7 @@ const json = iso(JSON.parse, JSON.stringify);
 
 `iso` takes 2 functions: one to go from the source to the target, and the other to go back.
 
-> Note this is a partial optic since `JSON.parse` can fail. We've got another optic (oh yeah) for the one that can account for failure
+> Note this is a partial Optic since `JSON.parse` can fail. We've got another Optic (oh yeah) to account for failure
 
 Ok, so having the `json` Iso, we can use it with the standard functions, for example
 
@@ -202,7 +202,7 @@ increments the minor directly in the JSON string.
 
 ## When the match can't always succeed
 
-As I mentioned, the previous case was not a total Isomorphism because JSON strings aren't always parsed to JS objects. So, as you may expect, we need to introduce another fancy name, this time our optic is called a `Prism`. Which is an Isomorphism that may fail when going from the source to the target (but which always succeeds when going back).
+As I mentioned, the previous case was not a total Isomorphism because JSON strings aren't always parsed to JS objects. So, as you may expect, we need to introduce another fancy name, this time our Optic is called a `Prism`. Which is an Isomorphism that may fail when going from the source to the target (but which always succeeds when going back).
 
 A simple way to create a Prism is the `simplePrism` function. It's like `iso` but you return `null` when the conversion fails.
 
@@ -223,21 +223,22 @@ const badJSonObj = "@#" + jsonObj;
 set(_.$(maybeJson).dependencies.mydep, "6.1.0", badJSonObj);
 ```
 
-will simply return the original JSON string. The conversion of the `semver` Iso to a prism is left as a simple exercise.
+will simply return the original JSON string. The conversion of the `semver` Iso to a Prism is left as an exercise.
 
 # Documentation
 
-Using optics follows a uniform pattern
-- First we create an optic which focuses on some value(s) inside a container
-- Then we use an operation to access or modify the value through the created optic
+Using Optics follows a uniform pattern
+- First we create an Optic which focuses on some value(s) inside a container
+- Then we use an operation to access or modify the value through the created Optic
 
-In the following, all functions are imported from the `focused` package
+>In the following, all showcased functions are imported from the `focused` package
   
 ## Creating Optics
 
-As seen in the tutorial,`lensProxy` offers a convenient way to create optics which focus on javascript objects and arrays. `lensProxy` is essentially a façade API which uses explicit functions behind the scene. In the following examples, we'll see both the proxy and the coresponding explicit functions.
+As seen in the tutorial,`lensProxy` offers a convenient way to create Optics which focus on javascript objects and arrays. `lensProxy` is essentially a façade API which uses explicit functions behind the scene. In the following examples, we'll see both the proxy and the coresponding explicit functions.
 
 ### Object properties
+
 As we saw in the tutorial, we use the familiar property access notation to focus on an object property. For example
 
 ```js
@@ -245,17 +246,18 @@ const _ = lensProxy()
 const nameProp = _.name
 ```
 
-creates a lens which focuses on the `name` property of an object.
+creates a Lens which focuses on the `name` property of an object.
 
 Using the explicit style, we can use the the `prop` function
 
 ```js
 const nameProp = prop("name")
 ```
-As said previously, **a lens focuses exactly on one value**, it means the value must exist in the target container (in this sense the `prop` lens is *partial*). For example, if you use `nameProp` on an object which doesn't have a `name` property, it will throw an error.
+As said previously, **a Lens focuses exactly on one value**, it means the value must exist in the target container (in this sense the `prop` lens is *partial*). For example, if you use `nameProp` on an object which doesn't have a `name` property, it will throw an error.
 
 ### Array elements
-As with object properties, we use the array index notation. For example
+
+As with object properties, we use the array index notation to focus on an array element at a specific index. For example
 
 ```js
 const _ = lensProxy()
@@ -267,57 +269,39 @@ creates a lens that focuses on the first element on an array. The underlying fun
 const firstElem = index(0)
 ```
 
+`index` is also a partial Lens, meaning it will throw if given index is out of the bounds of the target array.
+
 ### Creating custom lenses
 
-The `lens` function can be used to create arbitrary lenses. The (monomorphic) signature of the function is
-
-```js
-lens<S,A>(
-	getter: S => A, 
-	setter: (A,S) => S
-) => SimpleLens<S,A>
-```
->I'm using pseudo typescript signatures that omit the names of function parameters: `S => A` means a function which takes a single parameter of type `S` and returns a parameter of type `A`. `S` and `A` are called *Generic types* and are used as placeholders for arbitrary types, for example,  we can obtain `string` => `number` by substituting `S` with `string` and `A` with `number`.
-
-The `lens` function takes 2 parameters
+The `lens` function can be used to create arbitrary Lenses. The function takes 2 parameters
 
 - `getter` is used to extract the focus value from the target container
 - `setter` is used to update the target container with a new focus value.
 
-And returns a `SimpleLens<S,A>` which you can simply view as an abstract type:  it's the lens object which focus on a value of type `A` inside a container of type `S`.
-
->The type is called `SimpleLens` because there is a more general *polymorphic* type of lenses which can also modify the type of the target container. But for now, we just focus (pun intended) on *monomorphic* lenses which just return the same type when updating.
-
-For example
+In the following example, `nameProp` is equivalent to the `nameProp` Lens we saw earlier.
 
 ```js
-/*
-type Person = {
-  name: string
-}
-
-nameProp: SimpleLens<Person, string>
-*/
-const nameProp = lense(
-	s => s.name,
-	(value, s) => ({...s, name: value})
+const nameProp = lens(
+  s => s.name,
+  (value, s) => ({...s, name: value})
 ) 
 ```
-is equivalent to the `nameProp` lens we saw earlier.
 
 As you may have guessed, both `prop` and `index` can be implemented using `lens`
 
-### Composing lenses
+### Composing Lenses
 
->Generally you can combine any 2 optics together, even if they're of different kind (eg you can combine lenses with traversals)
+>Generally you can combine any 2 Optics together, even if they're of different kind (eg you can combine Lenses with Traversals)
 
-A nice property of lenses, and optics in general, is that they can be combined to create a focus on deeply nested values. For example
+A nice property of Lenses, and Optics in general, is that they can be combined to create a focus on deeply nested values. For example
 
 ```js
 const _ = lensProxy()
 const street = _.freinds[0].address.street
 ```
-creates a lens which focuses  on the `street` of the `address` of the first element of the `freinds` array. As a matter of comparaison, let's say we want to update, immutably, the `street` property on a given object `person`. Using JavaScript spread syntax
+
+creates a Lens which focuses  on the `street` of the `address` of the first element of the `freinds` array. As a matter of comparaison, let's say we want to update, immutably, the `street` property on a given object `person`. Using JavaScript spread syntax
+
 
 ```js
 const firstFreind = person.freinds[0];
@@ -336,11 +320,13 @@ const newPerson = {
 };
 ```
 
-The equivalent operation in `focused` lenses is
+The equivalent operation in `focused` Lenses is
+
 ```js
 const newPerson = set(_.freinds[0].address.street, "new street", person)
 ```
-We're chaining `.` accesses to successively focus on deeply nested values. Behind the scene, `lensProxy` is creating the necessary `prop` and `index` lenses, then composing them using `compose` function. Using explicit style, the above lens could be rewritten like
+
+We're chaining `.` accesses to successively focus on deeply nested values. Behind the scene, `lensProxy` is creating the necessary `prop` and `index` Lenses, then composing them using `compose` function. Using explicit style, the above Lens could be rewritten like
 
 ```js
 const streetLens = compose(
@@ -351,12 +337,133 @@ const streetLens = compose(
 );
 ```
 
-The important thing to remember here, is that`lensProxy` is essentially doing the same thing in the above `compose` example. Plus some memoization tricks to ensure that lenses are created only once and reused on subsequent operations
+The important thing to remember here, is that`lensProxy` is essentially doing the same thing in the above `compose` example. Plus some memoization tricks to ensure that Lenses are created only once and reused on subsequent operations.
 
-(TBD)
+## Creating Isomorphisms
+
+Isomorphisms, or simply Isos, are useful when we want to switch between different representations of the same object. In the tutorial, we already saw `json` which create an Iso between a JSON string and the underlying object that the string parses to.
+
+As we saw, we can use the `iso` function to create a simple Iso. It takes a couple of functions 
+
+- the firs function is used to convert from the source representation to the target one
+- the second function is used to convert back
+
+We'll see another interesting example of Isos in the next section
+
+## Creating Traversals
+
+While Lenses can focus exactly on one value. Traversals has the ability to focus on many values (including `0`).
+
+### Array Traversals
+
+Perhaps the most familiar Traversal is `each` which focuses on all elements of an array
+
+```js
+const todos = ["each", "pray", "love"];
+over(each, x => x.toUpperCase(), todos)
+// ["EACH", "PRAY", "LOVE"]
+```
+
+which is essentially equivalent to the `map` operation of array. However, as we said, what sets Optics apart is their ability to compose with other Optics
+
+```js
+const todos = [
+  { title: "eat", done: false },
+  { title: "pray", done: false },
+  { title: "love", done: false }
+];
+// set done to `true` for all todos
+set(
+  compose(each, prop("done")),
+  true,
+  todos
+)
+```
+
+This can be more concisely formulated using the proxy interface
+
+```js
+const _ = lensProxy();
+set(_.$(each).done, true, todos)
+```
+
+Note that when Traversals are composed with another Optic, the result is always a Traversal.
+
+### Traversing Map's keys/values
+
+Another useful example is traversing keys or values of a JavaScript `Map` object. Although the library already provides `eachMapKey` and `eachMapValue` Traversals for that purpose, it would be instructive to see how we can build them by simple composition of more primitive Optics.
+
+First, we can observe that a `Map` object can be seen also as a collection of `[key, value]` pairs. So we can start by creating an Iso between `Map` and `Array<[key, value]>`
+
+```js
+const mapEntries = iso(
+  map => [...map.entries()], 
+  entries => new Map(entries)
+);
+```
+
+Then from here, we can traverse keys or values by simply focusing on the appropriate index (`0` or `1`) of each pair in the returned array. 
+
+```js
+eachMapValue = compose(mapEntries, each, index(1));
+eachMapKey = compose(mapEntries, each, index(0));
+```
+
+Since composition with a Traversal is also a Traversal. In the above examples, we obtain, in both cases, a Traversal that focuses on all key/values of the Map.
+
+As an illustration, the following example use `eachMapValue` combined with the `prop("score")` lens to increase the score of each player stored in the Map. 
+
+```js
+const playerMap = new Map([
+  ["Yassine", { name: "Yassine", score: 41 }], 
+  ["Yahya", { name: "Yahya", score: 800 }], 
+  ["Ayman", { name: "Ayman", score: 410} ]
+]);
+const _ = lensProxy();
+over(
+  _.$(eachMapValue).score, 
+  x => x + 1000, 
+  playerMap
+);
+```
+
+### Filtered Traversals
+
+Another useful function is `filtered`. It can be used to restrict the set of values obtained from another Traversal. The function takes 2 arguments
+
+- A predicate used to filter traversed elements
+- The Traversal to be filtered (defaults to `each`)
+
+```js
+const todos = [
+  { title: "eat", done: false },
+  { title: "pray", done: true },
+  { title: "love", done: true }
+];
+
+const isDone = t => t.done
+// view title of all done todos
+toList(_.$(filtered(isDone)).title, todos);
+// => ["pray", "love"]
+// set done of all done todos to false
+set(_.$(filtered(isDone)).done, false, todos)
+```
+
+Note that `filtered` can work with arbitrary traversals, not just arrays.
+
+```js
+const playersAbove300 = filtered(p => p.score > 300, eachMapValue)
+over(
+  _.$(playersAbove300).score, 
+  x => x + 1000, 
+  playerMap
+);
+```
+
+(TBC)
 
 ## Todo
-- [ ] completing documentation (how to create optics, more examples, API ...)
+- [ ] completing documentation
 - [ ] add typings
 - [ ] Indexed Traversals
 - [ ] port more operators from Haskell lens library (with use case justification)
