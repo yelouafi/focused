@@ -8,16 +8,19 @@ import { index } from "./lens";
 */
 
 // each : Traversal< Array<A>, Array<B>, A, B>
-function _each(anApplicative, f, xs) {
+export function each(anApplicative, f, xs) {
   return anApplicative.combine(id, xs.map(f));
 }
 
-export function each() {
-  return _each;
+// eachOf: <A>() => Traversal< Array<A>, Array<B>, A, B>
+// this of the convenience of typings since TypeScript doesn't
+// allow type parameters on non functions
+export function eachOf() {
+  return each;
 }
 
 // filter : (A => Boolean) => Traversal< Array<A>, Array<B>, A, B>
-export function filtered(pred, traverse = _each) {
+export function filtered(pred, traverse = each) {
   return function filterTraversal(anApplicative, f, s) {
     return traverse(anApplicative, update, s);
 
@@ -45,13 +48,13 @@ export function maybeProp(name) {
 // eachValue :: SimpleTraversal<Map<K,V>, V>
 export const eachMapValue = compose(
   mapEntries,
-  _each,
+  each,
   index(1)
 );
 
 // eachKey :: SimpleTraversal<Map<K,V>, K>
 export const eachMapKey = compose(
   mapEntries,
-  _each,
+  each,
   index(0)
 );

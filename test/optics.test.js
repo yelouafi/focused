@@ -99,7 +99,7 @@ test("view/atProp", assert => {
 
 test("toList/each", assert => {
   assert.deepEqual(
-    toList(_.nakama.$(each()).name, state),
+    toList(_.nakama.$(each).name, state),
     state.nakama.map(n => n.name)
   );
   assert.end();

@@ -22,8 +22,8 @@ export interface Applicative<A, B, FA, FB> extends Functor<A, B, FA, FB> {
 }
 
 export interface Getting<R, S, A> {
-  zz_type: "Getting";
-  zz_applyOptic: <FA extends Const<R, A>, FS extends Const<R, S>>(
+  "~~type~~": "Getting";
+  "~~apply~~": <FA extends Const<R, A>, FS extends Const<R, S>>(
     F: Applicative<A, S, FA, FS>,
     f: Fn<A, FA>,
     s: S
@@ -31,8 +31,8 @@ export interface Getting<R, S, A> {
 }
 
 export interface Getter<S, A> {
-  zz_type: "Getting";
-  zz_applyOptic: <R, FA extends Const<R, A>, FS extends Const<R, S>>(
+  "~~type~~": "Getting";
+  "~~apply~~": <R, FA extends Const<R, A>, FS extends Const<R, S>>(
     F: Functor<A, S, FA, FS>,
     f: Fn<A, FA>,
     s: S
@@ -40,15 +40,15 @@ export interface Getter<S, A> {
 }
 
 export interface Iso<S, T, A, B> {
-  zz_type: "Getting" & "Iso" & "Lens" & "Traversal";
-  zz_applyOptic: (<FB, FT>(F: Functor<B, T, FB, FT>, f: Fn<A, FB>, s: S) => FT);
+  "~~type~~": "Getting" & "Iso" & "Lens" & "Traversal";
+  "~~apply~~": (<FB, FT>(F: Functor<B, T, FB, FT>, f: Fn<A, FB>, s: S) => FT);
   from: (s: S) => A;
   to: (b: B) => T;
 }
 
 export interface Prism<S, T, A, B> {
-  zz_type: "Getting" & "Prism" & "Traversal";
-  zz_applyOptic: (<FB, FT>(
+  "~~type~~": "Getting" & "Prism" & "Traversal";
+  "~~apply~~": (<FB, FT>(
     F: Applicative<B, T, FB, FT>,
     f: Fn<A, FB>,
     s: S
@@ -58,13 +58,13 @@ export interface Prism<S, T, A, B> {
 }
 
 export interface Lens<S, T, A, B> {
-  zz_type: "Getting" & "Lens" & "Traversal";
-  zz_applyOptic: (<FB, FT>(F: Functor<B, T, FB, FT>, f: Fn<A, FB>, s: S) => FT);
+  "~~type~~": "Getting" & "Lens" & "Traversal";
+  "~~apply~~": (<FB, FT>(F: Functor<B, T, FB, FT>, f: Fn<A, FB>, s: S) => FT);
 }
 
 export interface Traversal<S, T, A, B> {
-  zz_type: "Getting" & "Traversal";
-  zz_applyOptic: (<FB, FT>(
+  "~~type~~": "Getting" & "Traversal";
+  "~~apply~~": (<FB, FT>(
     F: Applicative<B, T, FB, FT>,
     f: Fn<A, FB>,
     s: S
@@ -164,7 +164,7 @@ export function atProp<S, K extends keyof S>(
 ): SimpleLens<S | null, S[K] | null>;
 export function to<S, A>(getter: (s: S) => A): Getter<S, A>;
 
-export function each<A>(): SimpleTraversal<A[], A>;
+export function eachOf<A>(): SimpleTraversal<A[], A>;
 
 export function filtered<A, B>(
   f: (x: A) => Boolean,
@@ -211,15 +211,3 @@ export type GetterProxy<P, S> = Getter<P, S> &
   };
 
 export function lensProxy<P, S = P>(parent?: SimpleLens<P, S>): LensProxy<P, S>;
-
-type Address = {
-  street: string;
-  num: number;
-};
-
-type Person = {
-  fname: string;
-  addresses: Address[];
-};
-
-const _ = lensProxy<Person>();
