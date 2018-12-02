@@ -165,6 +165,7 @@ export function atProp<S, K extends keyof S>(
 export function to<S, A>(getter: (s: S) => A): Getter<S, A>;
 
 export function eachOf<A>(): SimpleTraversal<A[], A>;
+export const each: SimpleTraversal<any[], any>;
 
 export function filtered<A, B>(
   f: (x: A) => Boolean,

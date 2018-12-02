@@ -22,6 +22,7 @@ export {
 } from "./prism";
 export {
   each,
+  eachOf,
   filtered,
   maybeProp,
   eachMapKey,
