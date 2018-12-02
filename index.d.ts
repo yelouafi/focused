@@ -63,7 +63,7 @@ export interface Lens<S, T, A, B> {
 }
 
 export interface Traversal<S, T, A, B> {
-  zz_type: { _brand: "Getting" & "Traversal" };
+  zz_type: "Getting" & "Traversal";
   zz_applyOptic: (<FB, FT>(
     F: Applicative<B, T, FB, FT>,
     f: Fn<A, FB>,
@@ -173,8 +173,8 @@ export function filtered<A, B>(
 export function maybeProp<S, K extends keyof S>(
   name: K
 ): SimpleTraversal<S, S[K]>;
-// eachValue :: SimpleTraversal<Map<K,V>, V>
-// eachKey :: SimpleTraversal<Map<K,V>, K>
+// TODO: eachValue :: SimpleTraversal<Map<K,V>, V>
+// TODO: eachKey :: SimpleTraversal<Map<K,V>, K>
 
 export function left<A, B>(a: A): Either<A, B>;
 export function rght<A, B>(b: B): Either<A, B>;
@@ -190,7 +190,7 @@ export function withPrism<S, T, A, B, R>(
   aPrism: Prism<S, T, A, B>,
   f: (match: (s: S) => Either<T, A>, build: (b: B) => T) => R
 ): R;
-// maybeJson : SimplePrism<String,Object>
+// TODO: maybeJson :: SimplePrism<String,Object>
 
 export type LensProxy<P, S> = SimpleLens<P, S> &
   (S extends object ? { [K in keyof S]: LensProxy<P, S[K]> } : {}) & {
