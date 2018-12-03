@@ -462,8 +462,7 @@ over(
 
 (TBC)
 
-## Todo
-- [ ] completing documentation
-- [ ] add typings
+## Todos
+- [ ] API docs
+- [x] add typings
 - [ ] Indexed Traversals
-- [ ] port more operators from Haskell lens library (with use case justification)
