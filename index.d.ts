@@ -211,23 +211,27 @@ export function has<S, A>(optic: Getting<boolean, S, A>, state: S): boolean;
 
 export function toList<S, A>(optic: Getting<A[], S, A>, state: S): A[];
 
-export function append<A>(optic: SimpleTraversal<A[], A>, x: A, xs: A[]): A[];
-export function insertAt<A>(
-  optic: SimpleTraversal<A[], A>,
+export function append<S, A>(
+  optic: SimpleTraversal<S, A[]>,
+  item: A,
+  state: S
+): S;
+export function insertAt<S, A>(
+  optic: SimpleTraversal<S, A[]>,
   index: number,
-  x: A,
-  xs: A[]
-): A[];
-export function removeAt<A>(
-  optic: SimpleTraversal<A[], A>,
+  item: A,
+  state: S
+): S;
+export function removeAt<S, A>(
+  optic: SimpleTraversal<S, A[]>,
   index: number,
-  xs: A[]
-): A[];
-export function removeIf<A>(
-  optic: SimpleTraversal<A[], A>,
+  state: S
+): S;
+export function removeIf<S, A>(
+  optic: SimpleTraversal<S, A[]>,
   f: (x: A) => boolean,
-  xs: A[]
-): A[];
+  state: S
+): S;
 
 export function iso<S, T, A, B>(
   from: (s: S) => A,
