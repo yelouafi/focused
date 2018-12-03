@@ -77,26 +77,116 @@ export type SimplePrism<S, A> = Prism<S, S, A, A>;
 export type SimpleLens<S, A> = Lens<S, S, A, A>;
 export type SimpleTraversal<S, A> = Traversal<S, S, A, A>;
 
-export function compose<S, T, A, B, X, Y>(
+// arity 2
+export function compose<S, T, A, B, C, D>(
   parent: Iso<S, T, A, B>,
-  child: Iso<A, B, X, Y>
-): Iso<S, T, X, Y>;
-export function compose<S, T, A, B, X, Y>(
+  child: Iso<A, B, C, D>
+): Iso<S, T, C, D>;
+export function compose<S, T, A, B, C, D>(
   parent: Prism<S, T, A, B>,
-  child: Prism<A, B, X, Y>
-): Prism<S, T, X, Y>;
-export function compose<S, T, A, B, X, Y>(
+  child: Prism<A, B, C, D>
+): Prism<S, T, C, D>;
+export function compose<S, T, A, B, C, D>(
   parent: Lens<S, T, A, B>,
-  child: Lens<A, B, X, Y>
-): Lens<S, T, X, Y>;
-export function compose<S, T, A, B, X, Y>(
+  child: Lens<A, B, C, D>
+): Lens<S, T, C, D>;
+export function compose<S, T, A, B, C, D>(
   parent: Traversal<S, T, A, B>,
-  child: Traversal<A, B, X, Y>
-): Traversal<S, T, X, Y>;
-export function compose<S, T, A, B, X, Y>(
+  child: Traversal<A, B, C, D>
+): Traversal<S, T, C, D>;
+export function compose<S, A, B>(
   parent: Getter<S, A>,
-  child: Getter<A, X>
-): Getter<S, X>;
+  child: Getter<A, B>
+): Getter<S, B>;
+// arity 3
+export function compose<S, T, A, B, C, D, E, F>(
+  parent: Iso<S, T, A, B>,
+  child1: Iso<A, B, C, D>,
+  child2: Iso<C, D, E, F>
+): Iso<S, T, E, F>;
+export function compose<S, T, A, B, C, D, E, F>(
+  parent: Prism<S, T, A, B>,
+  child1: Prism<A, B, C, D>,
+  child2: Prism<C, D, E, F>
+): Prism<S, T, E, F>;
+export function compose<S, T, A, B, C, D, E, F>(
+  parent: Traversal<S, T, A, B>,
+  child1: Traversal<A, B, C, D>,
+  child2: Traversal<C, D, E, F>
+): Traversal<S, T, E, F>;
+export function compose<S, A, B, C>(
+  parent: Getter<S, A>,
+  child1: Getter<A, B>,
+  child2: Getter<B, C>
+): Getter<S, C>;
+// arity 4
+export function compose<S, T, A, B, C, D, E, F, G, H>(
+  parent: Iso<S, T, A, B>,
+  child1: Iso<A, B, C, D>,
+  child2: Iso<C, D, E, F>,
+  child3: Iso<E, F, G, H>
+): Iso<S, T, G, H>;
+export function compose<S, T, A, B, C, D, E, F, G, H>(
+  parent: Prism<S, T, A, B>,
+  child1: Prism<A, B, C, D>,
+  child2: Prism<C, D, E, F>,
+  child3: Prism<E, F, G, H>
+): Prism<S, T, G, H>;
+export function compose<S, T, A, B, C, D, E, F, G, H>(
+  parent: Lens<S, T, A, B>,
+  child1: Lens<A, B, C, D>,
+  child2: Lens<C, D, E, F>,
+  child3: Lens<E, F, G, H>
+): Lens<S, T, G, H>;
+export function compose<S, T, A, B, C, D, E, F, G, H>(
+  parent: Traversal<S, T, A, B>,
+  child1: Traversal<A, B, C, D>,
+  child2: Traversal<C, D, E, F>,
+  child3: Traversal<E, F, G, H>
+): Traversal<S, T, G, H>;
+export function compose<S, A, B, C, D>(
+  parent: Getter<S, A>,
+  child1: Getter<A, B>,
+  child2: Getter<B, C>,
+  child3: Getter<C, D>
+): Getter<S, D>;
+// arity 5
+export function compose<S, T, A, B, C, D, E, F, G, H, I, J>(
+  parent: Iso<S, T, A, B>,
+  child1: Iso<A, B, C, D>,
+  child2: Iso<C, D, E, F>,
+  child3: Iso<E, F, G, H>,
+  child4: Iso<G, H, I, J>
+): Iso<S, T, I, J>;
+export function compose<S, T, A, B, C, D, E, F, G, H, I, J>(
+  parent: Prism<S, T, A, B>,
+  child1: Prism<A, B, C, D>,
+  child2: Prism<C, D, E, F>,
+  child3: Prism<E, F, G, H>,
+  child4: Prism<G, H, I, J>
+): Prism<S, T, I, J>;
+export function compose<S, T, A, B, C, D, E, F, G, H, I, J>(
+  parent: Lens<S, T, A, B>,
+  child1: Lens<A, B, C, D>,
+  child2: Lens<C, D, E, F>,
+  child3: Lens<E, F, G, H>,
+  child4: Lens<G, H, I, J>
+): Lens<S, T, I, J>;
+export function compose<S, T, A, B, C, D, E, F, G, H, I, J>(
+  parent: Traversal<S, T, A, B>,
+  child1: Traversal<A, B, C, D>,
+  child2: Traversal<C, D, E, F>,
+  child3: Traversal<E, F, G, H>,
+  child4: Traversal<G, H, I, J>
+): Traversal<S, T, I, J>;
+export function compose<S, A, B, C, D, E>(
+  parent: Getter<S, A>,
+  child1: Getter<A, B>,
+  child2: Getter<B, C>,
+  child3: Getter<C, D>,
+  child4: Getter<D, E>
+): Getter<S, E>;
+// for higher arities you can use _.$().$()... of nest compose calls
 
 export function over<S, T, A, B>(
   optic: Traversal<S, T, A, B>,
