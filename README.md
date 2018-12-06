@@ -1,11 +1,11 @@
 
 # focused
 
-Yet another Optics library for JavaScript, based on the famous lens library from Haskell, wrapped in a convenient Proxy interface.
+Yet another Optics library for JavaScript, based on the famous lens library from Haskell. Wrapped in a convenient Proxy interface.
 
 Dismissing all the FP jargon, this library will allow you to:
 
-- Create functional referances (Optics), i.e. like pointers to nested parts in data structures (like Object properties, Array elements, Map keys/values).
+- Create functional referances (Optics), i.e. like pointers to nested parts in data structures (e.g. Object properties, Array elements, Map keys/values, or even fancier parts like a number inside a string ...).
 - Apply immutable updates to data structures pointed by those functional references.
 
 # Install
